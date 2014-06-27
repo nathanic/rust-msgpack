@@ -1,7 +1,9 @@
 #![crate_id = "msgpack#0.1"]
 #![comment = "msgpack.org implementation for Rust"]
 #![license = "MIT/ASL2"]
-#![crate_type = "lib"]
+// #![crate_type = "lib"]
+#![crate_type = "rlib"]
+#![crate_type = "dylib"]
 #![feature(struct_variant)]
 #![allow(unused_must_use, dead_code)]
 
