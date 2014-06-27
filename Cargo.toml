@@ -1,0 +1,14 @@
+[package]
+
+name = "msgpack"
+version = "0.1.0"
+authors = [ "mneumann@ntecs.de" ]
+
+[[lib]]
+
+name = "msgpack" # the name of the executable to generate
+# crate_type = ["dylib", "staticlib"]
+crate_type = ["staticlib"]
+path = "src/msgpack/lib.rs"
+
+# vi: ft=conf

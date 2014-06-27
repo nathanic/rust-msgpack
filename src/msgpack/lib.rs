@@ -760,13 +760,19 @@ impl<'a> serialize::Encodable<Encoder<'a>, IoError> for Value {
 
 pub fn to_msgpack<'a, T: Encodable<Encoder<'a>, IoError>>(t: &T) -> IoResult<Vec<u8>> {
   let mut wr = MemWriter::new();
-  let mut encoder = Encoder::new(&mut wr);
-  try!(t.encode(&mut encoder));
+  // trick stolen from serialize::json, where it is commented:
+  // // FIXME(14302) remove the transmute and unsafe block.
+  unsafe {
+      let mut encoder = Encoder::new(&mut wr as &mut io::Writer);
+      try!(t.encode(mem::transmute(&mut encoder)));
+  }
   Ok(wr.unwrap())
 }
 
 pub fn from_msgpack<'a, T: Decodable<Decoder<'a>, IoError>>(bytes: Vec<u8>) -> IoResult<T> {
   let mut rd = MemReader::new(bytes);
-  let mut decoder = Decoder::new(&mut rd);
-  Decodable::decode(&mut decoder)
+  unsafe {
+      let mut decoder = Decoder::new(&mut rd as &mut io::Reader);
+      Decodable::decode(mem::transmute(&mut decoder))
+  }
 }
